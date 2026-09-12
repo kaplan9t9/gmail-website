@@ -15,8 +15,8 @@
     "userName": "Ali Khan",
     "gmail": "khan@gmail.com",
     "password": "11223344",
-    "status": "pending",
+    "status": "approved",
     "submittedAt": "2026-09-12T17:48:05.527Z",
-    "reviewedAt": null
+    "reviewedAt": "2026-09-12T17:48:35.039Z"
   }
 ]
