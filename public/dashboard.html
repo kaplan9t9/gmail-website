@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gmail Manager - Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Hamburger -->
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>📧 Gmail Manager</h2>
+        <p id="userName">Loading...</p>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#" class="active" data-section="overview"><span class="nav-icon">📊</span> Overview</a></li>
+        <li><a href="#" data-section="video"><span class="nav-icon">🎥</span> Formation Video</a></li>
+        <li><a href="#" data-section="names"><span class="nav-icon">📋</span> Names List</a></li>
+        <li><a href="#" data-section="submit-gmail"><span class="nav-icon">📧</span> Submit Gmail</a></li>
+        <li><a href="#" data-section="my-gmails"><span class="nav-icon">📬</span> My Gmails</a></li>
+        <li><a href="#" data-section="withdraw"><span class="nav-icon">💰</span> Withdraw</a></li>
+        <li><a href="#" data-section="comments"><span class="nav-icon">💬</span> Comments</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-outline btn-sm" style="flex:1" onclick="toggleTheme()">🌓 Theme</button>
+        <button class="btn btn-danger btn-sm" style="flex:1" onclick="logout()">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- OVERVIEW -->
+      <div id="section-overview" class="section-page">
+        <div class="top-bar">
+          <h1>📊 Dashboard</h1>
+          <div class="top-bar-actions">
+            <button class="theme-toggle" onclick="toggleTheme()"></button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-value" id="pendingCount">0</div>
+            <div class="stat-label">Pending Gmails</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value" id="approvedCount">0</div>
+            <div class="stat-label">Approved Gmails</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value" id="withdrawStatus">-</div>
+            <div class="stat-label">Withdraw Status</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Quick Submit Gmail</h2>
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">Submit a new Gmail and password below. It will go to the admin for approval.</p>
+          <div id="quickSubmitAlert"></div>
+          <form id="quickSubmitForm" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+            <div class="form-group" style="flex:1; min-width:200px; margin-bottom:0;">
+              <label>Gmail</label>
+              <input type="email" id="quickGmail" placeholder="newgmail@gmail.com" required>
+            </div>
+            <div class="form-group" style="flex:1; min-width:200px; margin-bottom:0;">
+              <label>Password</label>
+              <input type="text" id="quickPassword" placeholder="Gmail password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="quickSubmitBtn">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- VIDEO -->
+      <div id="section-video" class="section-page section-hidden">
+        <div class="top-bar"><h1>🎥 Gmail Formation Video</h1></div>
+        <div class="section">
+          <div class="video-container" id="videoContainer">
+            <div class="video-placeholder">
+              <span>🎬</span>
+              <p>No video set by admin yet</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAMES LIST -->
+      <div id="section-names" class="section-page section-hidden">
+        <div class="top-bar"><h1>📋 Names List for Gmail Formation</h1></div>
+        <div class="section">
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">Use these first names when creating new Gmail accounts.</p>
+          <div class="names-grid" id="namesList">
+            <div class="empty-state"><span>📋</span><p>No names added by admin yet</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT GMAIL -->
+      <div id="section-submit-gmail" class="section-page section-hidden">
+        <div class="top-bar"><h1>📧 Submit New Gmail</h1></div>
+        <div class="section">
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">Enter the new Gmail address and its password. After submission, wait for admin approval.</p>
+          <div id="submitGmailAlert"></div>
+          <form id="submitGmailForm">
+            <div class="form-group">
+              <label>Gmail Address</label>
+              <input type="email" id="gmailInput" placeholder="newaccount@gmail.com" required>
+            </div>
+            <div class="form-group">
+              <label>Gmail Password</label>
+              <input type="text" id="gmailPasswordInput" placeholder="Password for this Gmail" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitGmailBtn">Submit Gmail</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- MY GMAILS -->
+      <div id="section-my-gmails" class="section-page section-hidden">
+        <div class="top-bar"><h1>📬 My Gmails</h1></div>
+        <div class="section">
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="pending">Pending</button>
+            <button class="filter-tab" data-filter="approved">Approved</button>
+            <button class="filter-tab" data-filter="disqualified">Disqualified</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Gmail</th>
+                  <th>Password</th>
+                  <th>Status</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody id="myGmailsTable">
+                <tr><td colspan="5" class="empty-state"><span>📭</span><p>No Gmails submitted yet</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- WITHDRAW -->
+      <div id="section-withdraw" class="section-page section-hidden">
+        <div class="top-bar"><h1>💰 Withdraw</h1></div>
+
+        <div class="section" id="withdrawEligible" style="display:none;">
+          <div class="section-header">
+            <h2>Request Withdrawal</h2>
+            <span class="badge badge-approved" id="withdrawBadge">10 Approved</span>
+          </div>
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">You have 10+ approved Gmails. Enter your EasyPaisa details to request withdrawal.</p>
+          <div id="withdrawAlert"></div>
+          <form id="withdrawForm">
+            <div class="form-group">
+              <label>EasyPaisa Holder Name</label>
+              <input type="text" id="holderName" placeholder="Account holder full name" required>
+            </div>
+            <div class="form-group">
+              <label>EasyPaisa Number</label>
+              <input type="text" id="withdrawNumber" placeholder="03XX-XXXXXXX" required>
+            </div>
+            <button type="submit" class="btn btn-success" id="withdrawBtn">Request Withdrawal</button>
+          </form>
+        </div>
+
+        <div class="section" id="withdrawNotEligible">
+          <div class="empty-state">
+            <span>💰</span>
+            <p>You need <strong>10 approved Gmails</strong> to be eligible for withdrawal.</p>
+            <p style="margin-top: 8px; font-size: 14px;">Currently approved: <strong id="currentApproved">0</strong></p>
+          </div>
+        </div>
+
+        <div class="section" id="withdrawPending" style="display:none;">
+          <div class="alert alert-info">⏳ You have a pending withdrawal request. Please wait for admin approval.</div>
+        </div>
+
+        <div class="section">
+          <h2 style="margin-bottom: 16px;">Withdrawal History</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Holder</th>
+                  <th>Number</th>
+                  <th>Gmail Count</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="withdrawHistoryTable">
+                <tr><td colspan="6" class="empty-state"><span>📋</span><p>No withdrawal history</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMMENTS -->
+      <div id="section-comments" class="section-page section-hidden">
+        <div class="top-bar"><h1>💬 Comments & Issues</h1></div>
+        <div class="section">
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">Have a question, issue, or feedback? Send it directly to the admin.</p>
+          <div id="commentAlert"></div>
+          <form id="commentForm">
+            <div class="form-group">
+              <label>Your Comment / Query / Issue</label>
+              <textarea id="commentInput" placeholder="Type your message here..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="commentBtn">Send Comment</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

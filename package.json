@@ -1,0 +1,9 @@
+{
+  "name": "gmail-management-website",
+  "version": "1.0.0",
+  "description": "Gmail Management Website - Netlify + GitHub",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

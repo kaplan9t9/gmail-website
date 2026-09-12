@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gmail Manager - Admin Panel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- ADMIN LOGIN -->
+  <div class="auth-page" id="adminLoginPage">
+    <div class="auth-container">
+      <div class="auth-logo">
+        <h1>🔐 Admin Panel</h1>
+        <p>Login with your GitHub Token</p>
+      </div>
+      <form class="auth-form" id="adminLoginForm">
+        <div id="adminLoginAlert"></div>
+        <div class="form-group">
+          <label>GitHub Token</label>
+          <input type="password" id="adminToken" placeholder="ghp_xxxxxxxxxxxx" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="adminLoginBtn">Login as Admin</button>
+        <div class="auth-links"><a href="/">← Back to User Login</a></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div class="dashboard" id="adminDashboard" style="display:none;">
+    <button class="hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>🔐 Admin Panel</h2>
+        <p>Gmail Manager</p>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#" class="active" data-section="admin-overview"><span class="nav-icon">📊</span> Overview</a></li>
+        <li><a href="#" data-section="admin-users"><span class="nav-icon">👥</span> All Users</a></li>
+        <li><a href="#" data-section="admin-gmails"><span class="nav-icon">📧</span> All Gmails</a></li>
+        <li><a href="#" data-section="admin-pending-withdraw"><span class="nav-icon">⏳</span> Pending Withdrawals</a></li>
+        <li><a href="#" data-section="admin-approved-withdraw"><span class="nav-icon">✅</span> Approved Withdrawals</a></li>
+        <li><a href="#" data-section="admin-comments"><span class="nav-icon">💬</span> Comments</a></li>
+        <li><a href="#" data-section="admin-settings"><span class="nav-icon">⚙️</span> Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-outline btn-sm" style="flex:1" onclick="toggleTheme()">🌓 Theme</button>
+        <button class="btn btn-danger btn-sm" style="flex:1" onclick="adminLogout()">Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- ADMIN OVERVIEW -->
+      <div id="section-admin-overview" class="section-page">
+        <div class="top-bar">
+          <h1>📊 Admin Overview</h1>
+          <div class="top-bar-actions">
+            <button class="btn btn-outline btn-sm" onclick="loadAdminData()">🔄 Refresh</button>
+            <button class="theme-toggle" onclick="toggleTheme()"></button>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-value" id="adminTotalUsers">0</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📧</div>
+            <div class="stat-value" id="adminTotalGmails">0</div>
+            <div class="stat-label">Total Gmails</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-value" id="adminPendingGmails">0</div>
+            <div class="stat-label">Pending Gmails</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-value" id="adminApprovedGmails">0</div>
+            <div class="stat-label">Approved Gmails</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value" id="adminPendingWithdrawals">0</div>
+            <div class="stat-label">Pending Withdrawals</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div class="stat-value" id="adminTotalComments">0</div>
+            <div class="stat-label">Comments</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div id="section-admin-users" class="section-page section-hidden">
+        <div class="top-bar"><h1>👥 All Users</h1></div>
+        <div class="section">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Name</th><th>Number</th><th>Gmail</th><th>Pending</th><th>Approved</th><th>Joined</th></tr>
+              </thead>
+              <tbody id="adminUsersTable">
+                <tr><td colspan="7" class="empty-state"><span>👥</span><p>No users yet</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- GMAILS -->
+      <div id="section-admin-gmails" class="section-page section-hidden">
+        <div class="top-bar"><h1>📧 All Gmails</h1></div>
+        <div class="section">
+          <div class="filter-tabs" id="adminGmailFilters">
+            <button class="filter-tab active" data-filter="all">All</button>
+            <button class="filter-tab" data-filter="pending">Pending</button>
+            <button class="filter-tab" data-filter="approved">Approved</button>
+            <button class="filter-tab" data-filter="disqualified">Disqualified</button>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>#</th><th>User</th><th>Gmail</th><th>Password</th><th>Status</th><th>Submitted</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="adminGmailsTable">
+                <tr><td colspan="7" class="empty-state"><span>📧</span><p>No Gmails submitted yet</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENDING WITHDRAWALS -->
+      <div id="section-admin-pending-withdraw" class="section-page section-hidden">
+        <div class="top-bar"><h1>⏳ Pending Withdrawal Requests</h1></div>
+        <div class="section">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>#</th><th>User</th><th>Holder Name</th><th>EasyPaisa #</th><th>Approved Gmails</th><th>Requested</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="adminPendingWithdrawTable">
+                <tr><td colspan="7" class="empty-state"><span>⏳</span><p>No pending requests</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPROVED WITHDRAWALS -->
+      <div id="section-admin-approved-withdraw" class="section-page section-hidden">
+        <div class="top-bar"><h1>✅ Approved Withdrawals</h1></div>
+        <div class="section">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>#</th><th>User</th><th>Holder Name</th><th>EasyPaisa #</th><th>Gmail Count</th><th>Approved On</th></tr>
+              </thead>
+              <tbody id="adminApprovedWithdrawTable">
+                <tr><td colspan="6" class="empty-state"><span>✅</span><p>No approved withdrawals yet</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMMENTS -->
+      <div id="section-admin-comments" class="section-page section-hidden">
+        <div class="top-bar"><h1>💬 User Comments & Issues</h1></div>
+        <div class="section">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>#</th><th>User</th><th>Number</th><th>Comment</th><th>Date</th></tr>
+              </thead>
+              <tbody id="adminCommentsTable">
+                <tr><td colspan="5" class="empty-state"><span>💬</span><p>No comments yet</p></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="section-admin-settings" class="section-page section-hidden">
+        <div class="top-bar"><h1>⚙️ Settings</h1></div>
+
+        <div class="section">
+          <h2 style="margin-bottom: 16px;">Gmail Formation Video</h2>
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">Paste a public Google Drive video link. Users will see this on their dashboard.</p>
+          <div id="videoSettingsAlert"></div>
+          <form id="videoSettingsForm" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+            <div class="form-group" style="flex:1; min-width:300px; margin-bottom:0;">
+              <label>Google Drive Video URL</label>
+              <input type="url" id="videoUrlInput" placeholder="https://drive.google.com/file/d/xxxxx/view">
+            </div>
+            <button type="submit" class="btn btn-primary">Save Video URL</button>
+          </form>
+        </div>
+
+        <div class="section">
+          <h2 style="margin-bottom: 16px;">Names List for Gmail Formation</h2>
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 14px;">Add first names for Gmail creation. One name per line.</p>
+          <div id="namesSettingsAlert"></div>
+          <form id="namesSettingsForm">
+            <div class="form-group">
+              <label>Names (one per line)</label>
+              <textarea id="namesInput" placeholder="Ali&#10;Ahmed&#10;Sara&#10;Fatima" rows="8"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Names List</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+    <div class="spinner"></div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
